@@ -13,6 +13,7 @@ public class ObjectResult {
 	private BarChartObject barChart;
 	private BarChartObject chartFirstResult;
 	private BarChartObject chartProducto;
+	private DataResult dataResult;
 	
 	public ObjectResult() {
 		// TODO Auto-generated constructor stub
@@ -20,7 +21,7 @@ public class ObjectResult {
 
 	public ObjectResult(List<TmpVentas> resultados, List<ResultsVentas> values,
 			List<ResultsImport> resultsValues, BarChartObject barChart,
-			BarChartObject chartFirstResult, BarChartObject chartProducto) {
+			BarChartObject chartFirstResult, BarChartObject chartProducto,DataResult dataResult) {
 		super();
 		this.resultados = resultados;
 		this.values = values;
@@ -28,6 +29,7 @@ public class ObjectResult {
 		this.barChart = barChart;
 		this.chartFirstResult = chartFirstResult;
 		this.chartProducto = chartProducto;
+		this.dataResult = dataResult;
 	}
 
 	public List<TmpVentas> getResultados() {
@@ -78,4 +80,11 @@ public class ObjectResult {
 		this.chartProducto = chartProducto;
 	}
 	
+	public DataResult getDataResult() {
+		return dataResult;
+	}
+	
+	public void setDataResult(DataResult dataResult) {
+		this.dataResult = dataResult;
+	}
 }

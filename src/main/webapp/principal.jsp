@@ -217,6 +217,7 @@
         <script src="<c:url value='resources/app/controllers/wordController.js'/>" ></script>
         <script src="<c:url value='resources/app/controllers/regresionController.js'/>" ></script>
         <script src="<c:url value='resources/app/controllers/importRegController.js'/>" ></script>
+        <script src="<c:url value='resources/app/controllers/modalController.js'/>" ></script>
         
         <!--  Configuracion de servicios -->
         <script src="<c:url value='resources/app/services/modeloService.js'/>" ></script>

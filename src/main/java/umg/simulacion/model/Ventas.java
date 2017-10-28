@@ -15,12 +15,17 @@ import javax.persistence.NamedNativeQueries;
 import javax.persistence.NamedNativeQuery;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.NamedStoredProcedureQueries;
+import javax.persistence.NamedStoredProcedureQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.SqlResultSetMapping;
 import javax.persistence.SqlResultSetMappings;
+import javax.persistence.StoredProcedureParameter;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
+import umg.simulacion.pojo.ResultsData;
+import umg.simulacion.pojo.ResultsSumatoria;
 import umg.simulacion.pojo.ResultsTemporal;
 import umg.simulacion.pojo.ResultsVentas;
 
@@ -112,6 +117,16 @@ import umg.simulacion.pojo.ResultsVentas;
 										"GROUP BY EXTRACT(MONTH FROM FECHA),EXTRACT(YEAR FROM FECHA),TO_CHAR(FECHA,'MONTH') "+ 
 										"ORDER BY EXTRACT(YEAR FROM FECHA) ASC ) T ",
 						 			  resultSetMapping = "ResultsVentas"),
+						 	@NamedNativeQuery(name = "Ventas.NativeQueryAllMes",
+									  query = "SELECT ROWNUM X, T.TOTAL Y, ROWNUM * ROWNUM X2, "+
+												"T.TOTAL * T.TOTAL Y2, ROWNUM * T.TOTAL XY, null N, T.ANIO , T.MES_TEXTO MES "+  
+												"FROM (SELECT TO_CHAR(FECHA,'MONTH') MES_TEXTO, EXTRACT(MONTH FROM FECHA) MES, EXTRACT(YEAR FROM FECHA) ANIO, SUM(TOTAL*CANTIDAD) TOTAL "+ 
+												"FROM VENTAS "+ 
+												"WHERE EXTRACT(YEAR FROM FECHA) >= ? "+
+												//"AND EXTRACT(MONTH FROM FECHA) = ? "+
+												"GROUP BY EXTRACT(MONTH FROM FECHA),EXTRACT(YEAR FROM FECHA),TO_CHAR(FECHA,'MONTH') "+ 
+												"ORDER BY EXTRACT(YEAR FROM FECHA),EXTRACT(MONTH FROM FECHA) ASC ) T ",
+								 			  resultSetMapping = "ResultsVentas"),
 	@NamedNativeQuery(name = "Ventas.NativeQueryCantidad",
 					  query = "SELECT MAX(ROWNUM) CANTIDAD "
 					  		+ "FROM (SELECT COUNT(*) TOTAL "
@@ -153,7 +168,14 @@ import umg.simulacion.pojo.ResultsVentas;
 										"AND EXTRACT(MONTH FROM FECHA) = DECODE(?2 ,0,EXTRACT(MONTH FROM FECHA),?2 ) "+
 										"GROUP BY EXTRACT(YEAR FROM FECHA) "+
 										"ORDER BY EXTRACT(YEAR FROM FECHA) ASC ",
-resultSetMapping = "ResultsTemporal")
+resultSetMapping = "ResultsTemporal"),
+	
+	@NamedNativeQuery(name = "Ventas.listData",
+	query = "SELECT  * FROM TMP_DATA",
+	resultSetMapping = "ResultsData"),
+	@NamedNativeQuery(name = "Ventas.sumatorias",
+	query = "SELECT SUM(YPROMEDIO2) YPROMEDIO2, SUM(YPRIMA2) YPRIMA2, COUNT(*) N FROM TMP_DATA",
+	resultSetMapping = "ResultsSumatoria")
 				 	  
 })
 @SqlResultSetMappings({
@@ -174,7 +196,39 @@ resultSetMapping = "ResultsTemporal")
 								 columns = {@ColumnResult(name = "CANTIDAD", type = Integer.class)							 			
 						 })
 			
+	}),
+	@SqlResultSetMapping(name = "ResultsData",
+	classes = {@ConstructorResult(targetClass = ResultsData.class,
+			columns = {@ColumnResult(name = "X", type = String.class),
+					   @ColumnResult(name = "Y", type = Double.class),
+					   @ColumnResult(name = "PROMEDIO", type = Double.class),
+					   @ColumnResult(name = "YPROMEDIO", type = Double.class),
+					   @ColumnResult(name = "YPROMEDIO2", type = Double.class),
+					   @ColumnResult(name = "YVALOR",  type = Double.class),
+					   @ColumnResult(name = "YPRIMA",  type = Double.class),
+					   @ColumnResult(name = "YPRIMA2",  type = Double.class)
+		})
+	}),
+	@SqlResultSetMapping(name = "ResultsSumatoria",
+	 classes = {@ConstructorResult(targetClass = ResultsSumatoria.class,
+			 columns = {@ColumnResult(name = "YPROMEDIO2", type = Double.class),
+		 				@ColumnResult(name = "YPRIMA2", type = Double.class),
+		 				@ColumnResult(name = "N", type = Integer.class)
+	 		})
+
 	})
+	
+})
+@NamedStoredProcedureQueries({
+	@NamedStoredProcedureQuery(
+		    name = "Ventas.callData",	    
+		    procedureName = "PKG_DATA.INSERT_DATA",
+		    parameters = {
+		        @StoredProcedureParameter(mode=javax.persistence.ParameterMode.IN, name="P_A", type=Double.class),
+		        @StoredProcedureParameter(mode=javax.persistence.ParameterMode.IN, name="P_B", type=Double.class),
+		        @StoredProcedureParameter(mode=javax.persistence.ParameterMode.IN, name="P_ANIO", type=Integer.class)
+		    }
+		)
 })
 @Table(name = "VENTAS")
 public class Ventas {

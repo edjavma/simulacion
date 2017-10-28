@@ -50,7 +50,7 @@
 	<div class="panel-body">
 		 <div class="form-group" >
 			    <label class="control-label col-sm-2" for="email">Cambiar Graficos</label>
-			    <div class="col-sm-10">
+			    <div class="col-sm-7">
 			      <select class="form-control" ng-model = "chart.value" >
 					<option value="BarChart">BarChart</option>
 					<option value="LineChart">LineChart</option>
@@ -58,6 +58,9 @@
 					<option value="ColumnChart">ColumnChart</option>
 					<option value="AreaChart">AreaChart</option>
 				</select>
+			    </div>
+			    <div class="col-sm-3">
+			    	<label class="checkbox-inline"><input type="checkbox" ng-model="product.disabled"  ng-change="summaryChecked()">Productos {{product.disabled}}</label>
 			    </div>
 		</div>
 	</div>
@@ -92,10 +95,21 @@
 		</table>
 	</div>
 </div>
+
+<div ng-switch="product.disabled" ng-if="resultados.length > 0 && show">
+ <div ng-switch-when="false">
+	<div     google-chart chart="principalChartObject" style="height:600px; width:100%;"></div>
+</div>
+<div ng-switch-when="true">	
+	<div    google-chart chart="objMultipleChart" style="height:600px; width:100%;"></div>
+</div>
+</div>
 <hr/>
 <div class="panel panel-default" ng-if="resultados.length > 0 && show">
 	<div class="panel-body">
 	<h1 class="text-center">Resultados</h1>
+	<a style="cursor:pointer;" ng-click="open('C')"><span class="fa fa-search">ver Coeficiente de Correlacion</span></a>
+	<a style="cursor:pointer;" ng-click="open('E')"><span class="fa fa-search">ver Error Estandar de estimacion</span></a>
 		<table class="table table-striped">
 			<thead>
 				<tr>

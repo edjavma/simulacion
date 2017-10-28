@@ -114,16 +114,27 @@ public class VentasController {
 			ResultsVentas ventas = ventasService.getFinalResult(desde,tipo,mes);
 			//ResultsTemporal cantidad = ventasService.conteo();
 			
+			System.out.println("N: "+ventas.getN());
+			System.out.println("X: "+ventas.getX());
+			System.out.println("Y: "+ventas.getY());
+			System.out.println("x2: "+ventas.getX2());
+			System.out.println("XY: "+ventas.getXy());
 			//Integer N = cantidad.getCantidad();
 			Integer N = ventas.getN();
+			
 			/*Calcular formula b =  N*(Sumatoria XY) -  (sumatoria X)*(sumatoria Y) / N*(Sumatoria X2) - (Sumatoria X)2 */
 			Double b =  ((N * ventas.getXy()) - (ventas.getX() * ventas.getY())) / ((N * ventas.getX2()) - (Math.pow(ventas.getX(), 2)));
 			
 			
 			/*Calcular formula a = (Sumatoria Y ) - b*(Sumatoria x) / N */
 			//Double a = (ventas.getY() - (b * ventas.getX()) / 5 );
-			Double a = (ventas.getY() - (b * ventas.getX())) / N;
+			//Double a = (ventas.getY() - (b * ventas.getX())) / N;
+			Double a = ((ventas.getY() * ventas.getX2()) - (ventas.getX() * ventas.getXy())) / ((N *  ventas.getX2()) - ((Math.pow(ventas.getX(), 2))));
+			//Double a = (ventas.getY() / N) -  ((b * ventas.getX()) / N);
 			
+			
+			System.out.println("B: "+b);
+			System.out.println("A: "+a);
 			/*Crecimiento para 3 años  c = b(n) / (sumatoria y)*/
 			Double c = (b * N) / ventas.getY();
 			
@@ -148,11 +159,13 @@ public class VentasController {
 								
 			}
 			
+		
+			
 			
 			List<TmpVentas> ventasTemporal = ventasService.createTmp(temporal);
 			List<ResultsVentas> totalVentas = ventasService.generarTabla(tipo,desde, mes);
 			
-			ObjectResult ob = new ObjectResult(ventasTemporal, totalVentas,null, genericChart.generarJsonChartTmp(ventasTemporal),genericChart.generarJsonChartVentas(totalVentas),genericChart.tempChart(Integer.valueOf(desde), mes));
+			ObjectResult ob = new ObjectResult(ventasTemporal, totalVentas,null, genericChart.generarJsonChartTmp(ventasTemporal),genericChart.generarJsonChartVentas(totalVentas),genericChart.tempChart(Integer.valueOf(desde), mes),null);
 			return new ResponseEntity<ObjectResult>(ob,HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

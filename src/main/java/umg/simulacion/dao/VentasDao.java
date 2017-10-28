@@ -7,6 +7,7 @@ import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
+import javax.persistence.StoredProcedureQuery;
 import javax.persistence.TypedQuery;
 import javax.transaction.Transactional;
 
@@ -15,6 +16,9 @@ import org.springframework.stereotype.Repository;
 import umg.simulacion.model.Producto;
 import umg.simulacion.model.TmpVentas;
 import umg.simulacion.model.Ventas;
+import umg.simulacion.pojo.DataResult;
+import umg.simulacion.pojo.ResultsData;
+import umg.simulacion.pojo.ResultsSumatoria;
 import umg.simulacion.pojo.ResultsTemporal;
 import umg.simulacion.pojo.ResultsVentas;
 
@@ -35,6 +39,9 @@ public interface VentasDao {
 	public List<ResultsVentas> findProductoByMes(Integer desde, Integer mes);
 	
 	public List<ResultsTemporal> findYearByParams(Integer desde, Integer mes);
+	
+	
+	public DataResult executeProcedure(Double a, Double b, Integer year);
 }
 
 @Repository
@@ -258,6 +265,41 @@ class VentasDaoImpl implements VentasDao{
 			e.printStackTrace();
 			return new ArrayList<ResultsTemporal>();
 		}
+	}
+
+	@Override
+	public DataResult executeProcedure(Double a, Double b, Integer year) {
+		DataResult result = new DataResult();
+		try {
+			StoredProcedureQuery call = entityManager.createNamedStoredProcedureQuery("Ventas.callData");
+			call.setParameter("P_A",  a);
+			call.setParameter("P_B",  b);
+			call.setParameter("P_ANIO", year);
+			call.execute();
+			
+			TypedQuery<ResultsData> query = entityManager
+					.createNamedQuery("Ventas.listData",ResultsData.class);
+			
+			TypedQuery<ResultsSumatoria> query2 = entityManager
+					.createNamedQuery("Ventas.sumatorias",ResultsSumatoria.class);
+						
+			result.setData(query.getResultList());
+			result.setSumatoria(query2.getSingleResult());
+			
+
+			Double r = Math.sqrt((result.getSumatoria().getyPrima2() / result.getSumatoria().getyPromedio2()));
+			Double s = Math.sqrt((result.getSumatoria().getyPromedio2() / (result.getSumatoria().getN() - 2)));
+			
+			result.setCorrelacion(r);
+			result.setErrorEstandar(s);
+			
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+			result = null;
+		}
+		
+		return result;
 	}
 	
 	

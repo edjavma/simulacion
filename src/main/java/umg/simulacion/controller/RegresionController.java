@@ -27,6 +27,7 @@ import umg.simulacion.charts.GenericChart;
 import umg.simulacion.enums.Month;
 import umg.simulacion.model.TmpImport;
 import umg.simulacion.model.TmpVentas;
+import umg.simulacion.pojo.DataResult;
 import umg.simulacion.pojo.FinalResultTemp;
 import umg.simulacion.pojo.ObjectResult;
 import umg.simulacion.pojo.ResultsVentas;
@@ -63,13 +64,21 @@ public class RegresionController {
 			List<TmpVentas> temporal = new ArrayList<TmpVentas>(); 
 			ResultsVentas ventas = regresionService.getRegresionVentas(desde,tipo,mes);
 			
+			System.out.println("N: "+ventas.getN());
+			System.out.println("X: "+ventas.getX());
+			System.out.println("Y: "+ventas.getY());
+			System.out.println("x2: "+ventas.getX2());
+			System.out.println("XY: "+ventas.getXy());
+			
 			Integer N = ventas.getN();
 			
 			Double B1 = (ventas.getXy() - (N  * ventas.getX() * ventas.getY())) / (ventas.getX2() - (N * (Math.pow(ventas.getX(), 2))));   
 			
 			
 			Double B0 = (ventas.getY() - (B1 * ventas.getX()));
-									
+			
+			System.out.println("B1: "+B1);
+			System.out.println("B0: "+B0);
 			
 			Long lastYear = ventasService.getLastYear();
 			Long val = null;
@@ -88,12 +97,14 @@ public class RegresionController {
 								
 			}
 			
+			DataResult res =  ventasService.executeProcedure(B0, B1, Integer.valueOf(desde));
+			
 			
 			List<TmpVentas> ventasTemporal = ventasService.createTmp(temporal);
 			List<ResultsVentas> totalVentas = regresionService.generarTabla(tipo,desde,mes);
 			
 			//ObjectResult ob = new ObjectResult(ventasTemporal, totalVentas,null,this.generarJsonChart(ventasTemporal));
-			ObjectResult ob = new ObjectResult(ventasTemporal, totalVentas,null,genericChart.generarJsonChartTmp(ventasTemporal),genericChart.generarJsonChartVentas(totalVentas),null);
+			ObjectResult ob = new ObjectResult(ventasTemporal, totalVentas,null,genericChart.generarJsonChartTmp(ventasTemporal),genericChart.generarJsonChartVentas(totalVentas),genericChart.tempChart(Integer.valueOf(desde), mes), res);
 			return new ResponseEntity<ObjectResult>(ob,HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

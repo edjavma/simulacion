@@ -1,5 +1,5 @@
 app.controller('regresionController',         
-        function($scope, regresionService, moment) {
+        function($scope, regresionService, moment, $uibModal) {
 	
        $scope.data = {};
        $scope.values = [];
@@ -9,6 +9,36 @@ app.controller('regresionController',
        $scope.meses = [];
        $scope.show = true;
        $scope.chart = {};
+       $scope.items = {};
+       
+       $scope.product = {};
+       $scope.product.disabled = false;
+       
+       $scope.myChartObject = {};
+       $scope.principalChartObject = {};
+       $scope.objMultipleChart = {};
+       
+       $scope.open = function (tipo) {
+    	   
+    	    var modalInstance = $uibModal.open({
+    	      templateUrl: 'resources/app/views/modal.jsp',
+    	      controller: 'modalController',
+    	      size: 'lg',
+    	      resolve: {
+    	        items: function () {
+    	          return $scope.items;
+    	        },
+    	        tipo: function () {
+    	        	return tipo;
+    	        }
+    	      }
+    	    });
+
+    	    modalInstance.result.then(function (selectedItem) {
+    	      //$ctrl.selected = selectedItem;
+    	    }, function () {
+    	    });
+    	  };
        
 $scope.getMeses = function(){
 	$scope.show = true;
@@ -90,6 +120,9 @@ $scope.getMeses = function(){
     			   $scope.dataSource.data = $scope.resultados;
     			   
     			   $scope.myChartObject = data.barChart;
+    			   $scope.principalChartObject = data.chartFirstResult;
+    			   $scope.objMultipleChart = data.chartProducto;
+    			   $scope.items = data.dataResult;
     		   },function(error){
     			   $scope.show = false;
     			   $scope.data = {};
