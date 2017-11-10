@@ -7,6 +7,7 @@ app.controller('importRegController',
        $scope.show = true;
        $scope.values = [];
        $scope.chart = {};
+       $scope.myChartObject =  {};
        
        $scope.getMeses = function(){
     		$scope.show = true;
@@ -83,7 +84,7 @@ app.controller('importRegController',
     		   
     	        importRegService.consulta(fd)
     		   .then(function(data){
-    			   $scope.data = {};
+    			 //  $scope.data = {};
     			   $('#myFile').val('');
     			   $scope.values = data.resultsValues;
     			   $scope.resultados = data.resultados;
@@ -103,12 +104,7 @@ app.controller('importRegController',
        }
        
        $scope.$watch('chart.value', function(NewValue, OldValue) {
-    	   console.log(NewValue);
-    	   console.log($scope.chart);
-    	   if($scope.myChartObject.options != null && $scope.myChartObject.options != undefined){
-    		   console.log($scope.chart);
     		   $scope.myChartObject.type = $scope.chart.value;   
-    	   }
     	   
        }, true);
            

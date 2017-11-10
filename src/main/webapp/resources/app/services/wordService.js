@@ -1,6 +1,6 @@
 app.factory('wordService',function($http,$q){
 	
-	var urlConsulta = '/Econometrico/insert';
+	var urlConsulta = '/Econometrico/regresion/uploadxml';
 	var fac = {};
 	
 	fac.consulta = function(data){

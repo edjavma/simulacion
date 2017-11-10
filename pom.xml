@@ -19,11 +19,29 @@
 	</properties>
 
 	<dependencies>
+	<!-- https://mvnrepository.com/artifact/commons-io/commons-io -->
+<dependency>
+    <groupId>commons-io</groupId>
+    <artifactId>commons-io</artifactId>
+    <version>2.4</version>
+</dependency>
+	
 		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>ojdbc6</artifactId>
 			<version>11.2.0</version>
 		</dependency>
+		
+		<dependency>
+	<groupId>com.thoughtworks.xstream</groupId>
+	<artifactId>xstream</artifactId>
+	<version>1.4.4</version>
+</dependency>
+<dependency>
+    <groupId>org.json</groupId>
+    <artifactId>json</artifactId>
+    <version>20160810</version>
+</dependency>
 		<!-- Spring -->
 		<dependency>
 			<groupId>org.springframework</groupId>

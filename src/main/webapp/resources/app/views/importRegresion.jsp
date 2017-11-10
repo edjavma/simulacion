@@ -39,7 +39,7 @@
 	<div class="form-group" ng-if="data.tipo != null && data.tipo != undefined">
 		<label class="control-label col-sm-2" for="anios">Calcular desde</label>
 		<div class="col-sm-10">
-			<input type="file" class="form-control" name="file" id="myFile" onchange="angular.element(this).scope().fileChange(this.files)" />
+			<input type="file" class="form-control" name="file" id="myFile" onchange="angular.element(this).scope().fileChange(this.files)" accept=".xlsx, .xml"/>
 		</div>
 	</div>		
 	

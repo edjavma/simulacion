@@ -119,7 +119,7 @@
 	        
 	        <li>
 	          <a href="#!/upload">
-	            <i class="fa fa-folder"></i> <span>Importar Xls</span>
+	            <i class="fa fa-folder"></i> <span>Importar</span>
 	            <span class="pull-right-container">
 	              <small class="label pull-right bg-green">new</small>
 	            </span>
@@ -140,16 +140,16 @@
 	          <a href="#!/regresion">
 	            <i class="fa fa-edit"></i> <span>Consulta</span>
 	            <span class="pull-right-container">
-	              <small class="label pull-right bg-green">new</small>
+	              <small class="label pull-right bg-yellow">view</small>
 	            </span>
 	          </a>
 	        </li>
 	        
 	        <li>
 	          <a href="#!/importRegresion">
-	            <i class="fa fa-folder"></i> <span>Importar Xls</span>
+	            <i class="fa fa-folder"></i> <span>Importar</span>
 	            <span class="pull-right-container">
-	              <small class="label pull-right bg-green">new</small>
+	              <small class="label pull-right bg-green">doc</small>
 	            </span>
 	          </a>
 	        </li>
